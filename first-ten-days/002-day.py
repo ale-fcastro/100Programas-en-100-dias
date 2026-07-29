@@ -1,4 +1,3 @@
-
 class ViewHelper:
     def __init__(self, active_option, sub_menu_select):
         self.active_option = active_option
@@ -107,8 +106,6 @@ class HelperConversor:
                 self.calcular_grados(value, sub_opcion_select)
             case 2 | 3:
                 self.calcular_distancias_y_pesos(value, sub_opcion_select, is_distance)
-
-
 
 print("----- BIENVENIDO A MI CONVERSOR DE UNIDADES SUPER BKN -----")
 
