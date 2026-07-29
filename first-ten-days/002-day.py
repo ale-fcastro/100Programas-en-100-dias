@@ -54,8 +54,8 @@ class ViewHelper:
         """)
         print("\n \n")
 
-    def opcion_switcher(self, opcion):
-        match opcion:
+    def opcion_switcher(self):
+        match self.active_option:
             case 1:
               self.show_grados()
             case 2:
@@ -90,6 +90,7 @@ class HelperConversor:
 
     def formula_helper(self, value, helper, invert):
         return value * helper if invert == True else value / helper
+
 
     def calcular_grados(self, inputvalue, invert):
         help_primario = 32.0
@@ -126,23 +127,22 @@ while not init_bucle:
             exit()
         continue
     else:
-        view.opcion_switcher(view.active_option)
-        opcion_sub_menu = int(input("Enter: "))
-        if opcion_sub_menu == 0:
+        view.opcion_switcher()
+        view.sub_menu_select = int(input("Enter: "))
+        if view.sub_menu_select == 0:
             view.active_option = 0
             continue
     print("\n")
+
     helper_conversor.procceso = view.active_option
 
     inputvalue = float(input("Ingresa el valor a convertir: "))
 
     # variables computadas o como le llamo yo lo que el usuario no ve
-    invert_conputado = True if opcion_sub_menu == 1 else False
+    invert_conputado = True if view.sub_menu_select == 1 else False
     is_distance = True if view.active_option == 2 else False
 
     helper_conversor.opcion_final_procedure_execute(inputvalue, invert_conputado, is_distance);
-
-    view.sub_menu_select = opcion_sub_menu
 
     view.print_result_depend(inputvalue, helper_conversor.salida)
 
