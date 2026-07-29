@@ -1,3 +1,4 @@
+
 class ViewHelper:
     def __init__(self, active_option, sub_menu_select):
         self.active_option = active_option
@@ -84,9 +85,8 @@ class ViewHelper:
                     print(f"\n{entrada:.2f} Libras = {result:.2f} Kg")
 
 class HelperConversor:
-    def __init__(self, salida, procceso):
+    def __init__(self, salida):
         self.salida = salida
-        self.procceso = procceso
 
     def formula_helper(self, value, helper, invert):
         return value * helper if invert == True else value / helper
@@ -101,8 +101,8 @@ class HelperConversor:
         help_shared_convercion = 1.60934 if is_distance == True else 2.20462
         self.salida = self.formula_helper(inputvalue, help_shared_convercion, invert)
     
-    def opcion_final_procedure_execute(self, value, sub_opcion_select, is_distance = None):
-        match self.procceso:
+    def opcion_final_procedure_execute(self, value, sub_opcion_select, is_distance, procceso):
+        match procceso:
             case 1:
                 self.calcular_grados(value, sub_opcion_select)
             case 2 | 3:
@@ -113,9 +113,8 @@ class HelperConversor:
 print("----- BIENVENIDO A MI CONVERSOR DE UNIDADES SUPER BKN -----")
 
 init_bucle = False
-helper_conversor = HelperConversor(0, 0)
+helper_conversor = HelperConversor(0)
 view = ViewHelper(0, 0)
-opcion_sub_menu = 0
 inputvalue = 0.0
 while not init_bucle:
 
@@ -134,15 +133,13 @@ while not init_bucle:
             continue
     print("\n")
 
-    helper_conversor.procceso = view.active_option
-
     inputvalue = float(input("Ingresa el valor a convertir: "))
 
     # variables computadas o como le llamo yo lo que el usuario no ve
     invert_conputado = True if view.sub_menu_select == 1 else False
     is_distance = True if view.active_option == 2 else False
 
-    helper_conversor.opcion_final_procedure_execute(inputvalue, invert_conputado, is_distance);
+    helper_conversor.opcion_final_procedure_execute(inputvalue, invert_conputado, is_distance, view.active_option);
 
     view.print_result_depend(inputvalue, helper_conversor.salida)
 
