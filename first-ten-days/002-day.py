@@ -109,13 +109,11 @@ class HelperConversor:
 
 print("----- BIENVENIDO A MI CONVERSOR DE UNIDADES SUPER BKN -----")
 
-init_bucle = False
 helper_conversor = HelperConversor(0)
 view = ViewHelper(0, 0)
 inputvalue = 0.0
-while not init_bucle:
+while True:
 
-    #  mostrar el menu en caso de ser primera vez o no estar en una opcion <--> o viseversa 
     if view.active_option == 0:
         view.show_menu()
         view.active_option = int(input("Enter: "))
@@ -132,7 +130,6 @@ while not init_bucle:
 
     inputvalue = float(input("Ingresa el valor a convertir: "))
 
-    # variables computadas o como le llamo yo lo que el usuario no ve
     invert_conputado = True if view.sub_menu_select == 1 else False
     is_distance = True if view.active_option == 2 else False
 
