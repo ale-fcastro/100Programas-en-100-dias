@@ -51,9 +51,18 @@ class GameHelper:
 
     def definir_ganador(self, round: Round):
         opt = {
-            0: { 1: 0, 2: 1 },
-            1: { 2: 0, 0: 1 },
-            2: { 0: 0, 1: 1 }
+            0: { 
+                1: 0, 
+                2: 1 
+            },
+            1: { 
+                2: 0, 
+                0: 1 
+            },
+            2: { 
+                0: 0, 
+                1: 1 
+            }
         }
         if round.player_one_select == round.player_too_select:
             self.empate += 1
@@ -130,8 +139,6 @@ class ConsoleShowHelper:
 
         print("------------------------------------------\n")
 
-
-
 # que empiece el juego
 def main():
     # definimos integrantes de la estrucutructura
@@ -172,5 +179,5 @@ def main():
 
         
 
-    
+main()  
 
