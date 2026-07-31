@@ -76,10 +76,7 @@ class ValidatorHelper:
 
     # 0: piedra - 1: papel - 2: tijera 
     def validate_entry(self, entry):
-        if entry == (0, 1, 2):
-            return True
-        else:
-            return False
+        return entry in (0,1,2)
 
 class ConsoleShowHelper:
     def __init__(self):
@@ -179,7 +176,7 @@ def main():
             jugador1.jugar(int(entry))
             jugador2.jugar()
 
-        if (validator_helper.validate_entry(jugador1.mano)):
+        if not validator_helper.validate_entry(jugador1.mano):
             print("Error de entrada Retry.... \n")
             continue
 
