@@ -18,9 +18,9 @@ import random
 
 class Jugador:
     def __init__(self):
-        self.nombre
-        self.mano: int
-        self.victorias: int
+        self.nombre = None
+        self.mano: int = None
+        self.victorias: int = 0
 
     def jugar(self, select):
         self.mano = select
@@ -34,20 +34,19 @@ class IA(Jugador):
         self.quien_soy("playi")
 
     def jugar(self):
-        randomano = random()
-        self.mano = randomano.choice((0,1,2))
+        self.mano = random.choice((0,1,2))
 
 class Round:
-    def __init__(self, result, player_one: Jugador, player_too: Jugador, winner: Jugador):
-        self.winner: Jugador = winner
+    def __init__(self, player_one: Jugador, player_too: Jugador):
+        self.winner: Jugador = None
         self.player_one = player_one
         self.player_too = player_too
       
 class GameHelper:
     def __init__(self, run: bool):
         self.run: bool = run
-        self.rounds: List<Round>()
-        self.empates: int
+        self.rounds: [Round] = []
+        self.empates: int = 0
 
     def definir_ganador(self, round: Round):
         opt = {
@@ -64,8 +63,8 @@ class GameHelper:
                 1: 1 
             }
         }
-        if round.player_one_select == round.player_too_select:
-            self.empate += 1
+        if round.player_one.mano == round.player_too.mano:
+            self.empates += 1
         else:
             round.winner = round.player_one if opt[round.player_one.mano][round.player_too.mano] == 1 else round.player_too
             round.winner.victorias += 1
@@ -84,7 +83,7 @@ class ValidatorHelper:
 
 class ConsoleShowHelper:
     def __init__(self):
-        self.ActualRound: Round
+        self.ActualRound: Round = None
 
     def mano_to_string(self, mano):
         opciones = {
@@ -117,7 +116,7 @@ class ConsoleShowHelper:
         print("""
         ---------------- NUEVA RONDA ----------------
 
-        Precione "Enter" si decea salir
+        Precione "Enter" si desea volver \n o ingrese su eleccion a jugar:
         """)
 
     def confirmacion_de_datos(self):
@@ -138,6 +137,9 @@ class ConsoleShowHelper:
             print(f"Victoria para: {self.ActualRound.winner.nombre}")
 
         print("------------------------------------------\n")
+    
+    def show_round_nunber(self, entry: int):
+        print("Ronda: " , entry)
 
 # que empiece el juego
 def main():
@@ -155,29 +157,44 @@ def main():
 
     while game.run:
 
-        if len(game.rounds) == 0:
+        varible_de_conprobacion = len(game.rounds)
+
+        if len(game.rounds) <= 0:
             console_show_helper.bienvenida()
+            print("\nsi decea salir precione 'enter'")
             jugador1.quien_soy(input("\n Name: "))
+            if jugador1.nombre == "":
+                game.run = False
+                continue
+            ronda = Round(jugador1, jugador2)
+            console_show_helper.ActualRound = ronda
+            game.rounds.append(round)
+            continue
         else:
             console_show_helper.solicitar_datos()
-            jugador1.jugar(int(input()))
+            entry = input()
+            if entry == '':
+                game.rounds.clear()
+                continue
+            jugador1.jugar(int(entry))
             jugador2.jugar()
 
         if (validator_helper.validate_entry(jugador1.mano)):
-            print("Error de entrada Retry....")
+            print("Error de entrada Retry.... \n")
             continue
 
         console_show_helper.confirmacion_de_datos()
-        ronda = Round(None, jugador1, jugador2, None)
 
         game.definir_ganador(ronda)
-        game.rounds.append(round)
-        
 
-        
+        console_show_helper.show_round_nunber(len(game.rounds))
 
+        console_show_helper.show_result()
 
-        
+        if input("si desea salir al menu principal precione 'enter' en caso de querere continuar escriba si: ") == "si":
+            continue
+        else:
+            game.rounds.clear()
 
-main()  
-
+# CERTIFICADO POR FCASTRO
+main()
