@@ -45,7 +45,7 @@ class Round:
 class GameHelper:
     def __init__(self, run: bool):
         self.run: bool = run
-        self.rounds: [Round] = []
+        self.rounds: list[Round] = []
         self.empates: int = 0
 
     def definir_ganador(self, round: Round):

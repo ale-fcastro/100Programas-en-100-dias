@@ -1,6 +1,6 @@
-entero: int = 0
-decimal: float = 0.0
-string: str = "" or ''
-boolean: bool = True
-lista: [] = [str]
+# int, str, bool, float
 
+numero_entero = int(2)
+numero_decimal = float(0.2)
+
+print(numero_entero + numero_decimal)
