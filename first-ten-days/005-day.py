@@ -121,7 +121,7 @@ class TaskManager:
             if t.Id == Id:
                 return t
             else:
-                return "Task no encontrado"
+                return False
 
     def ListAll(self):
         return [n for n in self.Tasks if n.Status != Status.DELETE]
@@ -132,6 +132,25 @@ class TaskManager:
     def update_status(self, new_status: Status, task: Task):
         task.Status = new_status
 
+    def IniciarTarea(self, Id: int):
+        # capturamos el error en caso de existir
+        result = self.validator_helper.validate_entry(Id, int)
+
+        # cortamos procceso en caso de falla 
+        if not result:
+            return [result, "Tipo de dato en id invalido"]
+        
+        tarea_a_eliminar = self.FindByid(Id)
+
+        # validamos que la tarea realmente sea una tarea es casi imposible pero uno nunca sabe (reutilizamos result)
+        result = self.validator_helper.validate_entry(tarea_a_eliminar, Task)
+
+        if not result:
+            return [result, "Error Encontrando Tarea valida"]
+
+        self.update_status(Status.EN_PROCESO, tarea_a_eliminar)
+        return [result,  "Listo"]
+    
 class ConsoleUI:
     def __init__(self):
         self.task_manager: TaskManager = TaskManager()
@@ -169,11 +188,10 @@ class ConsoleUI:
             print("\n No se pudo crear la tarea por que algunos de estos datos en invalido: ", validate_operation_result[1])
             return 0
     
-
     def update_task(self):
         self.primary_menu_select = 2
         self.list_show_task()
-        taskid = input("Increce el numero de la tarea qeu decea editar: ")
+        taskid = int(input("Increce el numero de la tarea qeu decea editar: "))
         result = self.solicitar_datos()
 
         validate_operation_result = self.task_manager.Update(taskid, result[0], result[1])
@@ -182,13 +200,67 @@ class ConsoleUI:
             print("\n No se pudo crear la tarea por que algunos de estos datos en invalido: ", validate_operation_result[1])
             return validate_operation_result
 
-    def list_show_task(self):
+    def delete_task(self):
+        self.primary_menu_select = 3
+
+        self.list_show_task()
+
+        taskid = int(input("Ingrese el ID de la tarea a eliminar: "))
+
+        result = self.task_manager.Delete(taskid)
+
+        if not result[0]:
+            print(f"\nERROR: {result[1]}")
+        else:
+            print("\nTarea eliminada correctamente.")
+
+    def completar_tarea(self):
+        self.primary_menu_select = 5
+
+        self.list_show_task()
+
+        taskid = int(input("Ingrese el ID de la tarea a completar: "))
+
+        result = self.task_manager.CompletarTarea(taskid)
+
+        if not result[0]:
+            print(f"\nERROR: {result[1]}")
+        else:
+            print("\nTarea completada correctamente.")
+
+    def iniciar_tarea(self):
+        self.primary_menu_select = 4
+
+        self.list_show_task()
+
+        taskid = int(input("Ingrese el ID de la tarea a iniciar: "))
+
+        result = self.task_manager.IniciarTarea(taskid)
+
+        if not result[0]:
+            print(f"\nERROR: {result[1]}")
+        else:
+            print("\nTarea iniciada correctamente.")
+
+    def listar_tarea_por_status(self):
+
+        print("""
+    1. Creada
+    2. En proceso
+    3. Completada
+    4. Eliminada
+    """)
+
+        status = Status(int(input("Seleccione un estado: ")))
+
+        tareas = self.task_manager.List_By_Status(status)
+
         print("\n")
         print("=" * 70)
         print(f"{'ID':<5}{'Título':<25}{'Estado':<15}Descripción")
         print("=" * 70)
 
-        for t in self.task_manager.ListAll():
+        for t in tareas:
             print(
                 f"{t.Id:<5}"
                 f"{t.Titulo:<25}"
@@ -197,7 +269,22 @@ class ConsoleUI:
             )
 
         print("=" * 70)
+
+    def list_show_task(self):
         print("\n")
+        print("=" * 90)
+        print(f"{'ID':<5}{'Título':<25}{'Estado':<18}{'Descripción'}")
+        print("-" * 90)
+
+        for t in self.task_manager.ListAll():
+            print(
+                f"{t.Id:<5}"
+                f"{t.Titulo:<25}"
+                f"{self.status_to_string(t.Status):<18}"
+                f"{t.Description}"
+            )
+
+        print("=" * 90)
 
     def menu_principal(self):
         print("\n ------------ Welcome to task manager ------------ \n")
@@ -208,16 +295,25 @@ class ConsoleUI:
                 return 1
             return 0
         else:
-            self.list_show_task()
-            return input("""
-                "1. Crear Tareas"
-                "2. Editar Tareas"
-                "3. Eliminar Tarea"
-                "4. Iniciar Tarea"
-                "5. Completar tarea"
-                "6. Filtrar Tarea"
-                "enter. Salir
-            """)
+            print("\n" + "=" * 60)
+            print("               TASK MANAGER")
+            print("=" * 60)
+
+            if len(self.task_manager.ListAll()) != 0:
+                self.list_show_task()
+
+            print("""
+        1) Crear tarea
+        2) Editar tarea
+        3) Eliminar tarea
+        4) Iniciar tarea
+        5) Completar tarea
+        6) Filtrar tareas
+
+        ENTER) Salir
+        """)
+
+            return input("Seleccione una opción: ")
 
     def show_opt_by_opt(self):
         match self.primary_menu_select:
@@ -225,18 +321,16 @@ class ConsoleUI:
                 self.crear_tarea()
             case 2: 
                 self.update_task()
-            # case 3:
-            #     self.delete_task()
-            # case 4:
-            #     self.iniciar_tarea()
-            # case 5:
-            #     self.completar_tarea()
-            # case 6:
-            #     self.listar_tarea_por_status()
+            case 3:
+                self.delete_task()
+            case 4:
+                self.iniciar_tarea()
+            case 5:
+                self.completar_tarea()
+            case 6:
+                self.listar_tarea_por_status()
             case 0:
                 self.menu_principal()
-
-
 
 # test
 def main():
@@ -244,10 +338,10 @@ def main():
     init = True
     while init:
         if consola.primary_menu_select == 0:
-            guardar_int = consola.menu_principal()
-            if guardar_int == '':
+            consola.primary_menu_select = consola.menu_principal()
+            if consola.primary_menu_select == '':
                 continue
-            consola.primary_menu_select = int(guardar_int)
+            consola.primary_menu_select = int(consola.primary_menu_select)
             continue
 
         if consola.primary_menu_select == '':
