@@ -21,8 +21,7 @@ class Persona:
     
     def validar_altura_no_sea_cero(self):
         return False if self.altura == 0.0 else True
-        
-
+  
     def show_person_information(self, clasificacion):
         print("\n Eres una persona con: ", self.peso, " kg y ", self.altura, " de Altura por lo que tu imc es de ", self.imc, " Esto significa que se encuentra en clasificacion un: " ,clasificacion, "\n")
 
