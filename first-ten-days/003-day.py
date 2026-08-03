@@ -13,8 +13,6 @@
     # 4. Obesidad: IMC de 30.0 o más
 #
 
-# PROGRAMARE COMO SI HABLARA CONTIGO PARA QUE ENTIENDAS MI CAMINO MENTAL
-# primero definire persona por que por que ahi peso y altura , y por que el imc es de el puede haber nombre edad etc si scala
 class Persona:
     def __init__(self, peso, altura, imc):
         self.peso = peso
@@ -25,14 +23,10 @@ class Persona:
         return False if self.altura == 0.0 else True
         
 
-    # no es nesesario mas que esto pero agregare esto por que si java moment y enserio es por que si
     def show_person_information(self, clasificacion):
         print("\n Eres una persona con: ", self.peso, " kg y ", self.altura, " de Altura por lo que tu imc es de ", self.imc, " Esto significa que se encuentra en clasificacion un: " ,clasificacion, "\n")
 
 
-# luego pienso la persona no clacula aunque si puede hacerlo,
-# por eso decimos la heramienta tiene un resultado y la persona un imc mismo dato si pero propositos diferentes 
-# es la heramienta la que lo hace imagino que entra a alguna app que lo aga por el asi que tenemso un:
 class IMCCalculatorHelper:
     def __init__(self, result, clasificacion):
         self.result = result

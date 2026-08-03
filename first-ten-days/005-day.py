@@ -13,7 +13,7 @@ class ValidatorEntryHelper:
     def validate_entry(self, entry, type: any):
         return True if isinstance(entry, type) else False
 
-    def validate_multi_entry(self, entries, types: list[any], valores_a_validar: list[str]): # certificado por fcastro, ame esto encerio estoy orgulloso waos
+    def validate_multi_entry(self, entries, types: list[any], valores_a_validar: list[str]):
         result: list[bool] = []
         list_value_errors: list[str] = []
         for i, entry in enumerate(entries):
@@ -128,6 +128,7 @@ class TaskManager:
 
     def List_By_Status(self, Status: Status):
         return [n for n in self.Tasks if n.Status == Status]
+
     # internal herper metod
     def update_status(self, new_status: Status, task: Task):
         task.Status = new_status
@@ -245,11 +246,11 @@ class ConsoleUI:
     def listar_tarea_por_status(self):
 
         print("""
-    1. Creada
-    2. En proceso
-    3. Completada
-    4. Eliminada
-    """)
+        1. Creada
+        2. En proceso
+        3. Completada
+        4. Eliminada
+        """)
 
         status = Status(int(input("Seleccione un estado: ")))
 
@@ -303,15 +304,15 @@ class ConsoleUI:
                 self.list_show_task()
 
             print("""
-        1) Crear tarea
-        2) Editar tarea
-        3) Eliminar tarea
-        4) Iniciar tarea
-        5) Completar tarea
-        6) Filtrar tareas
+            1) Crear tarea
+            2) Editar tarea
+            3) Eliminar tarea
+            4) Iniciar tarea
+            5) Completar tarea
+            6) Filtrar tareas
 
-        ENTER) Salir
-        """)
+            ENTER) Salir
+            """)
 
             return input("Seleccione una opción: ")
 
